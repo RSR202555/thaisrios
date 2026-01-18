@@ -1,4 +1,6 @@
 (function(){
+  document.documentElement.classList.add('js');
+
   const $ = (q, el=document) => el.querySelector(q);
   const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
 
