@@ -194,7 +194,7 @@ html.js .reveal.is-visible{opacity:1;transform:translateY(0)}
 
 @keyframes authority-scroll{
   from{transform:translateX(0)}
-  to{transform:translateX(calc(-1 * var(--authority-half, 0px)))}
+  to{transform:translateX(-50%)}
 }
 
 .authority-marquee:hover .authority-track{
