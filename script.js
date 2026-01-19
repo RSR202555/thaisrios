@@ -107,46 +107,47 @@
 
     let index = 0;
 
-    function getStep(){
-      if(!items.length) return 0;
-      const itemWidth = items[0].getBoundingClientRect().width;
-      const trackStyle = track ? window.getComputedStyle(track) : null;
-      const gap = trackStyle ? parseFloat(trackStyle.gap || '0') : 0;
-      return itemWidth + gap;
-    }
-
     function clamp(i){
       return Math.max(0, Math.min(i, items.length - 1));
     }
 
-    function update(){
-      if(!track) return;
-      const step = getStep();
-      track.style.transform = `translateX(${-index * step}px)`;
+    function getClosestIndex(){
+      if(!viewport || !items.length) return 0;
+      const left = viewport.scrollLeft;
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      items.forEach((el, i)=>{
+        const dist = Math.abs(el.offsetLeft - left);
+        if(dist < bestDist){
+          bestDist = dist;
+          bestIdx = i;
+        }
+      });
+      return bestIdx;
+    }
+
+    function scrollToIndex(i){
+      if(!viewport || !items.length) return;
+      index = clamp(i);
+      const el = items[index];
+      viewport.scrollTo({left: el.offsetLeft, behavior: 'smooth'});
       if(prevBtn) prevBtn.disabled = index === 0;
       if(nextBtn) nextBtn.disabled = index >= items.length - 1;
     }
 
-    if(prevBtn) prevBtn.addEventListener('click', ()=>{ index = clamp(index - 1); update(); });
-    if(nextBtn) nextBtn.addEventListener('click', ()=>{ index = clamp(index + 1); update(); });
+    if(prevBtn) prevBtn.addEventListener('click', ()=>{ scrollToIndex(getClosestIndex() - 1); });
+    if(nextBtn) nextBtn.addEventListener('click', ()=>{ scrollToIndex(getClosestIndex() + 1); });
 
-    // Basic touch swipe
-    let startX = null;
     if(viewport){
-      viewport.addEventListener('pointerdown', (e)=>{ startX = e.clientX; viewport.setPointerCapture(e.pointerId); });
-      viewport.addEventListener('pointerup', (e)=>{
-        if(startX === null) return;
-        const dx = e.clientX - startX;
-        const threshold = 40;
-        if(dx > threshold) index = clamp(index - 1);
-        if(dx < -threshold) index = clamp(index + 1);
-        startX = null;
-        update();
-      });
+      viewport.addEventListener('scroll', ()=>{
+        index = getClosestIndex();
+        if(prevBtn) prevBtn.disabled = index === 0;
+        if(nextBtn) nextBtn.disabled = index >= items.length - 1;
+      }, {passive:true});
     }
 
-    window.addEventListener('resize', ()=>update());
-    update();
+    window.addEventListener('resize', ()=>{ scrollToIndex(getClosestIndex()); });
+    scrollToIndex(0);
   }
 
   // WhatsApp verify

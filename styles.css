@@ -230,10 +230,19 @@ html.js .reveal.is-visible{opacity:1;transform:translateY(0)}
 }
 
 .carousel{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
-.carousel-viewport{overflow:hidden}
-.carousel-track{display:flex;gap:14px;transition:transform .4s ease}
+.carousel-viewport{
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+.carousel-viewport::-webkit-scrollbar{display:none}
+.carousel-track{display:flex;gap:14px}
 .video-card-compact{
   min-width:78%;
+  flex:0 0 auto;
+  scroll-snap-align:start;
   background:var(--white);
   border:1px solid var(--border);
   border-radius:18px;
