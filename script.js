@@ -59,6 +59,19 @@
         setHalf();
       });
 
+      // Ensure correct measurement after images/fonts finish loading
+      window.addEventListener('load', ()=>{
+        setHalf();
+      });
+
+      // If avatars load later, recalc once they finish
+      const imgs = Array.from(track.querySelectorAll('img'));
+      imgs.forEach((img)=>{
+        if(img.complete) return;
+        img.addEventListener('load', setHalf, {once:true});
+        img.addEventListener('error', setHalf, {once:true});
+      });
+
       window.addEventListener('resize', ()=>{
         setHalf();
       });
