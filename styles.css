@@ -245,6 +245,9 @@ html.js .reveal.is-visible{opacity:1;transform:translateY(0)}
   border:1px solid var(--border);
   background:var(--white);
   cursor:pointer;
+  position:relative;
+  z-index:5;
+  touch-action:manipulation;
   display:grid;place-items:center;
   font-size:26px;
   transition:transform .15s ease, border-color .15s ease;

@@ -109,9 +109,10 @@
 
     function getStep(){
       if(!items.length) return 0;
-      const style = window.getComputedStyle(items[0]);
-      const gap = parseFloat(style.marginRight || '0');
-      return items[0].getBoundingClientRect().width + gap;
+      const itemWidth = items[0].getBoundingClientRect().width;
+      const trackStyle = track ? window.getComputedStyle(track) : null;
+      const gap = trackStyle ? parseFloat(trackStyle.gap || '0') : 0;
+      return itemWidth + gap;
     }
 
     function clamp(i){
