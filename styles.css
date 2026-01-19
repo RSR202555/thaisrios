@@ -263,6 +263,20 @@ html.js .reveal.is-visible{opacity:1;transform:translateY(0)}
 }
 .carousel-btn:hover{transform:translateY(-1px);border-color:rgba(0,217,192,.45)}
 
+@media (max-width: 520px){
+  .carousel{position:relative;grid-template-columns:1fr;}
+  .carousel-viewport{grid-column:1;}
+  .carousel-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:20;
+  }
+  .carousel-btn:hover{transform:translateY(-50%)}
+  .carousel-btn[data-carousel-prev]{left:6px;}
+  .carousel-btn[data-carousel-next]{right:6px;}
+}
+
 .timeline{list-style:none;margin:0;padding:0;display:grid;gap:14px;position:relative}
 .timeline::before{content:"";position:absolute;left:14px;top:6px;bottom:6px;width:2px;background:rgba(44,44,44,.10)}
 .timeline-item{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:flex-start}

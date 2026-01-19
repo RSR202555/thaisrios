@@ -113,11 +113,12 @@
 
     function getClosestIndex(){
       if(!viewport || !items.length) return 0;
-      const left = viewport.scrollLeft;
+      const vpRect = viewport.getBoundingClientRect();
       let bestIdx = 0;
       let bestDist = Infinity;
       items.forEach((el, i)=>{
-        const dist = Math.abs(el.offsetLeft - left);
+        const r = el.getBoundingClientRect();
+        const dist = Math.abs(r.left - vpRect.left);
         if(dist < bestDist){
           bestDist = dist;
           bestIdx = i;
@@ -130,13 +131,24 @@
       if(!viewport || !items.length) return;
       index = clamp(i);
       const el = items[index];
-      viewport.scrollTo({left: el.offsetLeft, behavior: 'smooth'});
+      el.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'start'});
       if(prevBtn) prevBtn.disabled = index === 0;
       if(nextBtn) nextBtn.disabled = index >= items.length - 1;
     }
 
-    if(prevBtn) prevBtn.addEventListener('click', ()=>{ scrollToIndex(getClosestIndex() - 1); });
-    if(nextBtn) nextBtn.addEventListener('click', ()=>{ scrollToIndex(getClosestIndex() + 1); });
+    function bindNav(btn, dir){
+      if(!btn) return;
+      const go = (e)=>{
+        e?.preventDefault?.();
+        scrollToIndex(getClosestIndex() + dir);
+      };
+      btn.addEventListener('click', go);
+      btn.addEventListener('pointerup', go);
+      btn.addEventListener('touchend', go, {passive:false});
+    }
+
+    bindNav(prevBtn, -1);
+    bindNav(nextBtn, 1);
 
     if(viewport){
       viewport.addEventListener('scroll', ()=>{
