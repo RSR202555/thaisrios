@@ -7,6 +7,13 @@
   const yearEl = $('#year');
   if(yearEl) yearEl.textContent = String(new Date().getFullYear());
 
+  if('scrollRestoration' in history){
+    history.scrollRestoration = 'manual';
+  }
+  if(!location.hash){
+    window.scrollTo(0, 0);
+  }
+
   // Reveal on scroll
   const revealEls = $$('.reveal');
   // Ensure above-the-fold content is visible immediately (prevents "missing" hero video)
@@ -131,7 +138,8 @@
       if(!viewport || !items.length) return;
       index = clamp(i);
       const el = items[index];
-      el.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'start'});
+      const left = el.offsetLeft;
+      viewport.scrollTo({left, behavior: 'smooth'});
       if(prevBtn) prevBtn.disabled = index === 0;
       if(nextBtn) nextBtn.disabled = index >= items.length - 1;
     }
@@ -143,8 +151,6 @@
         scrollToIndex(getClosestIndex() + dir);
       };
       btn.addEventListener('click', go);
-      btn.addEventListener('pointerup', go);
-      btn.addEventListener('touchend', go, {passive:false});
     }
 
     bindNav(prevBtn, -1);
